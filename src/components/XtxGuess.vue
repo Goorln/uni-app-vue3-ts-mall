@@ -30,6 +30,16 @@ const getGussLikeData = async () => {
   }
 }
 
+// 重置数据的方法
+const resetData = () => {
+  // 重置页码
+  pageParams.page = 1
+  // 重置数据
+  guessLikeList.value = []
+  // 重置结束标记
+  finish.value = false
+}
+
 // 组件挂载完毕
 onMounted(() => {
   getGussLikeData()
@@ -37,6 +47,7 @@ onMounted(() => {
 
 // 暴露方法
 defineExpose({
+  resetData,
   getMore: getGussLikeData,
 })
 </script>
