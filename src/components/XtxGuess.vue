@@ -3,19 +3,31 @@ import { getGuessLikeAPI } from '@/services/home'
 import { ref, onMounted } from 'vue'
 import type { GuessItem } from '@/types/home'
 import type { PageParams } from '@/types/global'
-// 分页参数
+
+// 分页参数  Required表示必须传这个数据
 const pageParams: Required<PageParams> = {
   page: 1,
   pageSize: 10,
 }
+
+// 分页结束标记
+const finish = ref(false)
 const guessLikeList = ref<GuessItem[]>([])
+
 // 获取猜你喜欢数据
 const getGussLikeData = async () => {
+  if (finish.value === true) {
+    return uni.showToast({ icon: 'none', title: '没有更多数据了' })
+  }
   const res = await getGuessLikeAPI(pageParams)
   // guessLikeList.value = res.result.items
   // 数组追加
   guessLikeList.value.push(...res.result.items)
-  pageParams.page++
+  if (pageParams.page < res.result.pages) {
+    pageParams.page++
+  } else {
+    finish.value = true
+  }
 }
 
 // 组件挂载完毕
@@ -49,7 +61,7 @@ defineExpose({
       </view>
     </navigator>
   </view>
-  <view class="loading-text"> 正在加载... </view>
+  <view class="loading-text">{{ finish ? '' : ' 正在加载...' }} </view>
 </template>
 
 <style lang="scss">
