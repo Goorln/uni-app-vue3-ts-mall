@@ -13,7 +13,8 @@
       "miniprogram-api-typings",
       "@uni-helper/uni-app-types",
       "@uni-helper/uni-ui-types"
-    ]
+    ],
+    "moduleResolution": "node"
   },
   "vueCompilerOptions": {
     "nativeTags": ["block", "component", "template", "slot"]
