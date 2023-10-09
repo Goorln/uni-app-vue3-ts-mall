@@ -6,6 +6,7 @@ import CustomNavbar from './components/CustomNavbar.vue'
 import type { BannerItem, CategoryItem, HotItem } from '@/types/home'
 import CategoryPanel from './components/CategoryPanel.vue'
 import HotPanel from './components/HotPanel.vue'
+import type { XtxGuessInstance } from '@/components/components'
 
 // 获取轮播图数据
 const bannerList = ref<BannerItem[]>([])
@@ -32,14 +33,21 @@ onLoad(() => {
   getHomeCategoryData()
   getHomeHotData()
 })
+
+// 获取猜你喜欢组件实例
+const guessRef = ref<XtxGuessInstance>()
+// 滚动触底
+const onScrolltolower = () => {
+  guessRef.value?.getMore()
+}
 </script>
 <template>
   <CustomNavbar />
-  <scroll-view scroll-y class="scroll-view">
+  <scroll-view scroll-y class="scroll-view" @scrolltolower="onScrolltolower">
     <XtxSwiper :list="bannerList" />
     <CategoryPanel :list="categoryList" />
     <HotPanel :list="hotList" />
-    <XtxGuess />
+    <XtxGuess ref="guessRef" />
   </scroll-view>
 </template>
 <style lang="scss">

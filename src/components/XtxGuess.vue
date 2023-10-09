@@ -8,8 +8,15 @@ const getGussLikeData = async () => {
   const res = await getGuessLikeAPI()
   guessLikeList.value = res.result.items
 }
+
+// 组件挂载完毕
 onMounted(() => {
   getGussLikeData()
+})
+
+// 暴露方法
+defineExpose({
+  getMore: getGussLikeData,
 })
 </script>
 
