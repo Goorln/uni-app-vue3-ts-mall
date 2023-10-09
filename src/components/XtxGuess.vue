@@ -2,11 +2,20 @@
 import { getGuessLikeAPI } from '@/services/home'
 import { ref, onMounted } from 'vue'
 import type { GuessItem } from '@/types/home'
-
+import type { PageParams } from '@/types/global'
+// 分页参数
+const pageParams: Required<PageParams> = {
+  page: 1,
+  pageSize: 10,
+}
 const guessLikeList = ref<GuessItem[]>([])
+// 获取猜你喜欢数据
 const getGussLikeData = async () => {
-  const res = await getGuessLikeAPI()
-  guessLikeList.value = res.result.items
+  const res = await getGuessLikeAPI(pageParams)
+  // guessLikeList.value = res.result.items
+  // 数组追加
+  guessLikeList.value.push(...res.result.items)
+  pageParams.page++
 }
 
 // 组件挂载完毕
