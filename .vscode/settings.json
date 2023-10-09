@@ -1,2 +1,79 @@
 {
+    //------------------------------------------
+  // 窗口的设置
+  // 调整窗口的缩放级别。原始大小是 0，每次递增(例如 1)或递减(例如 -1)表示放大或缩小 20%。也可以输入小数以便以更精细的粒度调整缩放级别。
+  "window.zoomLevel": 1,
+  //-------------------------------------------
+  // 界面配置路径 Text Editor
+  // editor.wordWrap 配置为wordWrapColumn或者bounded时起作用
+  "editor.wordWrap": "bounded",
+  // 设置 超过word Wrap Column设置的字符数、达到视口最小宽度，时自动换行
+  "editor.wordWrapColumn": 120,
+  // 设置输入tab键时是否自动转为插入空格（默认ture，即自动转空格）,当editor.detectIndentation配置为 true 时，该配置项将被自动覆盖
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  // 执行单词相关的导航或操作时作为单词分隔符的字符。
+  "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?",
+  //--------------------------------------------
+  //界面配置路径 Text Editor -> Files
+  //设置延迟一定的时间后自动保存文件
+  "files.autoSave": "afterDelay",
+  // 设置自动保存文件前需要延迟的时间，单位毫秒 默认1000
+  "files.autoSaveDelay": 1000,
+  // 设置删除文件、目录时是否允许删除到操作系统回收站，默认为true，即允许
+  "files.enableTrash": true,
+  // 设置读写文件时所用编码 默认UTF-8，可针对每种语言进行设置
+  "files.encoding": "utf8",
+  // 设置打开文件时，是否自动猜测字符编码，默认false，即不自动猜测，可针对每种语言进行设置
+  "files.autoGuessEncoding": false,
+  //将 .art文件自动识别为html
+  "files.associations": {
+    "pages.json": "jsonc",
+    "manifest.json": "jsonc",
+    "*.cjson": "jsonc",
+    "*.wxss": "css",
+    "*.wxs": "javascriptreact",
+    "*.ts": "javascriptreact",
+    "*.vue": "vue"
+  },
+  //--------------------------------------------
+  // 界面配置路径 Text Editor -> Formatting
+  // 设置黏贴内容时是否自动格式化，true表示自动格式化，需要配置格式化器(formatter)才可使用
+  "editor.formatOnPaste": true,
+  // 设置保存文件时是否自动格式化，true表示自动格式化,需要配置格式化器(formatter)才可使用
+  "editor.formatOnSave": true,
+  // 设置保存文件时格式化整个文件还是仅被修改处。该配置项仅在 "editor.formatOnPaste" 为 true时生效
+  "editor.formatOnSaveMode": "file",
+  // 设置输入完成后是否自动格式化当前行
+  "editor.formatOnType": true,
+  //-------------------------------------------
+  // 界面配置路径 Text Editor -> Minimap
+  // 设置minimap的宽度以设置可渲染的最大列数，默认120
+  "editor.minimap.maxColumn": 120,
+  //-------------------------------------------
+  // 界面配置路径 Text Editor -> Suggestions
+  // 默认选项为true 设置回车时是否接受默认建议选项
+  "editor.quickSuggestions": {
+    "comments": "on",
+    "strings": "on",
+    "other": "on"
+  },
+  //-------------------------------------------
+  // Eslint插件配置
+  // 设置保存时是否自动修复代码
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.eslint": true
+  },
+  // 界面配置路径 Extensiosn -> ESlint
+  // 设置状态栏是否一直显示ESlint图标项，true表示一直显示
+  "eslint.alwaysShowStatus": true,
+  // 设置是否把ESlint作为一个格式化器，true表示启用
+  "eslint.format.enable": true,
+  // eslint 保存格式化
+  "eslint.enable": true,
+  "eslint.run": "onType",
+  "eslint.options": {
+    "extensions": [".js", ".ts", ".jsx", ".tsx", ".vue"]
+  },
 }
