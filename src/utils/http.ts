@@ -29,3 +29,50 @@ const httpInterceptor = {
 }
 uni.addInterceptor('request', httpInterceptor)
 uni.addInterceptor('request', httpInterceptor)
+
+// 请求函数
+interface Data<T> {
+  code: string
+  msg: string
+  result: T
+}
+// 2.2 添加类型 支持泛型
+export const http = <T>(options: UniApp.RequestOptions) => {
+  // 1. 返回promise对象
+  return new Promise<Data<T>>((resolve, reject) => {
+    uni.request({
+      ...options,
+      // 2.响应成功
+      success(res) {
+        // 状态码 2xx 表示成功请求到数据
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          // 2.1 提取核心数据 res.data
+          resolve(res.data as Data<T>)
+        } else if (res.statusCode === 401) {
+          // 401错误 -> 清理用户信息，跳转到登录页面
+          const memberStore = useMemberStore()
+          memberStore.clearProfile()
+          uni.navigateTo({ url: '/pages/login/login' })
+          // 标记失败，回传失败数据
+          reject(res)
+        } else {
+          // 其他错误 -> 根据后端错误轻提示
+          uni.showToast({
+            icon: 'none',
+            title: (res.data as Data<T>).msg || '请求错误！',
+          })
+          // 标记失败，回传失败数据
+          reject(res)
+        }
+      },
+      // 响应失败
+      fail(err) {
+        uni.showToast({
+          icon: 'none',
+          title: '网络错误，换个网络试试！',
+        })
+        reject(err)
+      },
+    })
+  })
+}
