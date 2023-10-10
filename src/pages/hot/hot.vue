@@ -23,12 +23,16 @@ onReady(() => {
 
 // *推荐封面图
 const bannerPicture = ref('')
-const subTypes = ref<SubTypeItem[]>([])
+const subTypes = ref<(SubTypeItem & { finish?: boolean })[]>([])
 const activeIndex = ref(0)
 
 // *获取热门推荐的数据
 const getHotRecommendData = async () => {
-  const res = await getHotRecommendAPI(currUrlMap!.url)
+  const res = await getHotRecommendAPI(currUrlMap!.url, {
+    // 技巧： 环境变量，开发环境，修改初始页面方便测试分页结束
+    page: import.meta.env.DEV ? 31 : 1,
+    pageSize: 10,
+  })
   // console.log(res.result)
   bannerPicture.value = res.result.bannerPicture
   subTypes.value = res.result.subTypes
@@ -39,22 +43,30 @@ onLoad(() => {
   getHotRecommendData()
 })
 
-// 滚动触底
+// *滚动触底
 const onScrollertolower = async () => {
-  // 获取当前项
+  // *获取当前项
   const currSubType = subTypes.value[activeIndex.value]
   console.log(currSubType)
-  // 当前页码累加
-  currSubType.goodsItems.page++
-  // 调用API传参
+  // 分页条件
+  if (currSubType.goodsItems.page < currSubType.goodsItems.pages) {
+    // * 当前页码累加
+    currSubType.goodsItems.page++
+  } else {
+    // 标记分页结束
+    currSubType.finish = true
+    return uni.showToast({ icon: 'none', title: '没有更多数据了~' })
+  }
+
+  // *调用API传参
   const res = await getHotRecommendAPI(currUrlMap!.url, {
     subType: currSubType.id,
     page: currSubType.goodsItems.page,
     pageSize: currSubType.goodsItems.pageSize,
   })
-  // 新的列表选项
+  // * 新的列表选项
   const newsubType = res.result.subTypes[activeIndex.value]
-  // 数组追加
+  // *数组追加
   currSubType.goodsItems.items.push(...newsubType.goodsItems.items)
 }
 </script>
@@ -101,7 +113,7 @@ const onScrollertolower = async () => {
           </view>
         </navigator>
       </view>
-      <view class="loading-text">正在加载...</view>
+      <view class="loading-text">{{ item.finish ? '没有更多数据了~' : '正在加载...' }}</view>
     </scroll-view>
   </view>
 </template>
