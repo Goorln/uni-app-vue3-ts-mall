@@ -114,6 +114,7 @@
   ],
   // 分包预下载规则
   "preloadRule": {
+    // 用户进入我的页面时 预下载分包
     "pages/my/my": {
       "network": "all",
       "packages": ["pagesMember"]
