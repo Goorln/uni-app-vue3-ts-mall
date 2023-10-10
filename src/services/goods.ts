@@ -1,11 +1,12 @@
 import type { GoodsItem } from '@/types/global'
+import type { GoodsResult } from '@/types/goods'
 import { http } from '@/utils/http'
 /**
  * 商品详情
  * @param id 商品id
  */
 export const getGoodsByIdAPI = (id: string) => {
-  return http<GoodsItem>({
+  return http<GoodsResult>({
     method: 'GET',
     url: '/goods',
     data: {
