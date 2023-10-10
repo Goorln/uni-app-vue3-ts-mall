@@ -5,16 +5,21 @@ import { getHomeBannerAPI } from '@/services/home'
 import type { BannerItem } from '@/types/home'
 import { getCategoryTopAPI } from '@/services/category'
 import type { CategoryTopItem } from '@/types/category'
+import PageSkeleton from './components/PageSkeleton.vue'
+
 // 获取轮播图数据
 const bannerList = ref<BannerItem[]>([])
 const getBannerData = async () => {
   const res = await getHomeBannerAPI(2)
   bannerList.value = res.result
 }
+
+// 是否数据加载完毕
+const isFinished = ref(false)
 // 页面加载
-onLoad(() => {
-  getBannerData()
-  getCategoryTopData()
+onLoad(async () => {
+  await Promise.all([getBannerData(), getCategoryTopData()])
+  isFinished.value = true
 })
 
 // 获取分类列表数据
@@ -32,7 +37,7 @@ const subCategoryList = computed(() => {
 </script>
 
 <template>
-  <view class="viewport">
+  <view class="viewport" v-if="isFinished">
     <!-- 搜索框 -->
     <view class="search">
       <view class="input">
@@ -83,6 +88,7 @@ const subCategoryList = computed(() => {
       </scroll-view>
     </view>
   </view>
+  <PageSkeleton v-else />
 </template>
 
 <style lang="scss">
