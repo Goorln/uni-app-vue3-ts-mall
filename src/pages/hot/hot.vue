@@ -47,7 +47,7 @@ onLoad(() => {
 const onScrollertolower = async () => {
   // *获取当前项
   const currSubType = subTypes.value[activeIndex.value]
-  console.log(currSubType)
+  // console.log(currSubType)
   // 分页条件
   if (currSubType.goodsItems.page < currSubType.goodsItems.pages) {
     // * 当前页码累加
