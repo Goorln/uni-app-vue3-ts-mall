@@ -22,11 +22,24 @@ export const getMemberAddressAPI = () => {
 }
 
 /**
- * 修改地址接口
+ * 修改地址列表获取
  */
 export const getMemberAddressByIdAPI = (id: string) => {
   return http<AddressItem>({
     method: 'GET',
     url: `/member/address/${id}`,
+  })
+}
+
+/**
+ * 修改地址请求
+ * @param id 地址ID 路径参数
+ * @param data 表单数据（请求体参数）
+ */
+export const putMemberAddressByIdAPI = (id: string, data: AddressParams) => {
+  return http({
+    method: 'PUT',
+    url: `/member/address/${id}`,
+    data,
   })
 }
