@@ -20,3 +20,13 @@ export const getMemberAddressAPI = () => {
     url: '/member/address',
   })
 }
+
+/**
+ * 修改地址接口
+ */
+export const getMemberAddressByIdAPI = (id: string) => {
+  return http<AddressItem>({
+    method: 'GET',
+    url: `/member/address/${id}`,
+  })
+}
