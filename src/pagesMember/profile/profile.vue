@@ -57,12 +57,31 @@ const onAvatarChange = () => {
 const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
   profile.value.gender = ev.detail.value as Gender
 }
+// 修改出生日期
+const onBirthdayChange: UniHelper.DatePickerOnChange = (ev) => {
+  profile.value.birthday = ev.detail.value
+}
 
+// 修改城市信息
+let fullLocationCode: [string, string, string] = ['', '', '']
+const onPlaceChange: UniHelper.RegionPickerOnChange = (ev) => {
+  console.log(ev.detail)
+  //修改前端界面
+  profile.value.fullLocation = ev.detail.value.join(' ')
+  console.log(profile.value.fullLocation)
+  // 提交后端更新
+  fullLocationCode = ev.detail.code!
+}
 // 修改用户信息
 const onSubmit = async () => {
+  const { nickname, gender, birthday } = profile.value
   const res = await putMemberProfileAPI({
-    nickname: profile.value?.nickname,
-    gender: profile.value.gender,
+    nickname,
+    gender,
+    birthday,
+    provinceCode: fullLocationCode[0],
+    cityCode: fullLocationCode[1],
+    countyCode: fullLocationCode[2],
   })
   // console.log(res)
   memberStore.profile!.nickname = res.result.nickname
@@ -120,6 +139,7 @@ const onSubmit = async () => {
             start="1900-01-01"
             :end="new Date()"
             :value="profile?.birthday"
+            @change="onBirthdayChange"
           >
             <view v-if="profile?.birthday">{{ profile?.birthday }}</view>
             <view class="placeholder" v-else>请选择日期</view>
@@ -127,8 +147,13 @@ const onSubmit = async () => {
         </view>
         <view class="form-item">
           <text class="label">城市</text>
-          <picker class="picker" mode="region" :value="profile?.fullLocation?.split(' ')">
-            <view v-if="false">{{ profile?.fullLocation }}</view>
+          <picker
+            class="picker"
+            mode="region"
+            :value="profile?.fullLocation?.split(' ')"
+            @change="onPlaceChange"
+          >
+            <view v-if="profile?.fullLocation">{{ profile?.fullLocation }}</view>
             <view class="placeholder" v-else>请选择城市</view>
           </picker>
         </view>
