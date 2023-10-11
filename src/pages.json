@@ -116,6 +116,18 @@
             "navigationBarTextStyle": "white",
             "navigationBarTitleText": "个人中心"
           }
+        },
+        {
+          "path": "address/address",
+          "style": {
+            "navigationBarTitleText": "地址管理"
+          }
+        },
+        {
+          "path": "address-form/address-form",
+          "style": {
+            "navigationBarTitleText": "地址管理"
+          }
         }
       ]
     }
