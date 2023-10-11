@@ -73,24 +73,26 @@ const onPlaceChange: UniHelper.RegionPickerOnChange = (ev) => {
 
 // 修改用户信息
 const onSubmit = async () => {
-  const { nickname, gender, birthday, profession } = profile.value
+  // console.log(profile, 'profile')
   const [provinceCode, cityCode, countyCode] = fullLocationCode
-  const res = await putMemberProfileAPI({
-    nickname,
-    gender,
-    birthday,
-    provinceCode,
-    cityCode,
-    countyCode,
-    profession,
-  })
-  // console.log(res)
-  memberStore.profile!.nickname = res.result.nickname
+  const { nickname, gender, birthday, profession } = profile.value
+  const params1 = { nickname, gender, birthday, profession }
+  const params2 = { nickname, gender, birthday, profession, provinceCode, cityCode, countyCode }
+  if (!fullLocationCode[0]) {
+    // 只修改专业
+    const res = await putMemberProfileAPI(params1)
+    memberStore.profile!.nickname = res.result.nickname
+  } else {
+    const res = await putMemberProfileAPI(params2)
+    memberStore.profile!.nickname = res.result.nickname
+  }
   uni.showToast({ icons: 'success', title: '修改成功' })
   setTimeout(() => {
     uni.navigateBack()
   }, 500)
 }
+
+//! 遗留问题：当修改了专业之后，城市会为空 没走onPlaceChange事件，所以fullLocationCode为空，拿不到数据
 </script>
 
 <template>
