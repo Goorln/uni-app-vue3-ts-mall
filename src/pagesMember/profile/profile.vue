@@ -61,27 +61,27 @@ const onGenderChange: UniHelper.RadioGroupOnChange = (ev) => {
 const onBirthdayChange: UniHelper.DatePickerOnChange = (ev) => {
   profile.value.birthday = ev.detail.value
 }
-
 // 修改城市信息
 let fullLocationCode: [string, string, string] = ['', '', '']
 const onPlaceChange: UniHelper.RegionPickerOnChange = (ev) => {
-  console.log(ev.detail)
+  // console.log(ev.detail)
   //修改前端界面
   profile.value.fullLocation = ev.detail.value.join(' ')
-  console.log(profile.value.fullLocation)
   // 提交后端更新
   fullLocationCode = ev.detail.code!
 }
+
 // 修改用户信息
 const onSubmit = async () => {
   const { nickname, gender, birthday } = profile.value
+  const [provinceCode, cityCode, countyCode] = fullLocationCode
   const res = await putMemberProfileAPI({
     nickname,
     gender,
     birthday,
-    provinceCode: fullLocationCode[0],
-    cityCode: fullLocationCode[1],
-    countyCode: fullLocationCode[2],
+    provinceCode,
+    cityCode,
+    countyCode,
   })
   // console.log(res)
   memberStore.profile!.nickname = res.result.nickname
