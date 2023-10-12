@@ -2,7 +2,7 @@
 import { useGuessList } from '@/composables'
 import { ref } from 'vue'
 import { onReady, onLoad } from '@dcloudio/uni-app'
-import { getMemberOrderByIdAPI } from '@/services/order'
+import { getMemberOrderByIdAPI, getMemberOrderConsignmentByIdAPI } from '@/services/order'
 import type { OrderResult } from '@/types/order'
 import { OrderState, orderStateList } from '@/services/constants'
 import { getPayMockAPI, getPayWxPayMiniPayAPI } from '@/services/pay'
@@ -84,6 +84,17 @@ const onOrderPay = async () => {
   // 关闭当前页面 在跳转支付结果页面
   uni.redirectTo({ url: `/pagesOrder/payment/payment?id=${query.id}` })
 }
+// 是否为开发环境
+const isDev = import.meta.env.DEV
+
+const onOrderSend = async () => {
+  if (isDev) {
+    await getMemberOrderConsignmentByIdAPI(query.id)
+    uni.showToast({ icon: 'success', title: '模拟发货成功' })
+    // 主动更新订单状态
+    order.value!.orderState = OrderState.DaiShouHuo
+  }
+}
 </script>
 
 <template>
@@ -134,7 +145,13 @@ const onOrderPay = async () => {
               再次购买
             </navigator>
             <!-- 待发货状态：模拟发货,开发期间使用,用于修改订单状态为已发货 -->
-            <view v-if="false" class="button"> 模拟发货 </view>
+            <view
+              v-if="isDev && order.orderState === OrderState.DaiFaHuo"
+              class="button"
+              @tap="onOrderSend"
+            >
+              模拟发货
+            </view>
           </view>
         </template>
       </view>
@@ -145,7 +162,7 @@ const onOrderPay = async () => {
           <view class="message">
             您已在广州市天河区黑马程序员完成取件，感谢使用菜鸟驿站，期待再次为您服务。
           </view>
-          <view class="date"> 2023-04-14 13:14:20 </view>
+          <view class="date"> {{ order.createTime }} </view>
         </view>
         <!-- 用户收货地址 -->
         <view class="locate">
