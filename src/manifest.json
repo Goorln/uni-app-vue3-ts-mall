@@ -48,7 +48,7 @@
   },
   /* 快应用特有相关 */
   "quickapp": {},
-  /* 小程序特有相关 */
+  /* 小程序特有相关 wx8eef85a5abd57103 wx26729f20b9efae3a*/
   "mp-weixin": {
     "appid": "wx8eef85a5abd57103",
     "setting": {

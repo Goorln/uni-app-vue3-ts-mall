@@ -5,6 +5,7 @@ import { onReady, onLoad } from '@dcloudio/uni-app'
 import { getMemberOrderByIdAPI } from '@/services/order'
 import type { OrderResult } from '@/types/order'
 import { OrderState, orderStateList } from '@/services/constants'
+import { getPayMockAPI, getPayWxPayMiniPayAPI } from '@/services/pay'
 
 // 获取屏幕边界到安全区域距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -67,6 +68,21 @@ onLoad(() => {
 const onTimeup = () => {
   // 修改订单状态为已取消
   order.value!.orderState = OrderState.YiQuXiao
+}
+
+// 订单支付
+const onOrderPay = async () => {
+  if (import.meta.env.DEV) {
+    // 开发环境模拟支付
+    await getPayMockAPI({ orderId: query.id })
+  } else {
+    // 正式环境微信支付
+    const res = await getPayWxPayMiniPayAPI({ orderId: query.id })
+    // console.log(res)
+    wx.requestPayment(res.result)
+  }
+  // 关闭当前页面 在跳转支付结果页面
+  uni.redirectTo({ url: `/pagesOrder/payment/payment?id=${query.id}` })
 }
 </script>
 
@@ -203,7 +219,7 @@ const onTimeup = () => {
       <view class="toolbar" :style="{ paddingBottom: safeAreaInsets?.bottom + 'px' }">
         <!-- 待付款状态:展示支付按钮 -->
         <template v-if="true">
-          <view class="button primary"> 去支付 </view>
+          <view class="button primary" @tap="onOrderPay"> 去支付 </view>
           <view class="button" @tap="popup?.open?.()"> 取消订单 </view>
         </template>
         <!-- 其他订单状态:按需展示按钮 -->
