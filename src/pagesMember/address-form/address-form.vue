@@ -83,8 +83,9 @@ const formRef = ref<UniHelper.UniFormsInstance>()
 // 提交表单
 const onSubmit = async () => {
   try {
+    // 表单校验
     await formRef.value?.validate?.()
-
+    // 校验通过 发起请求
     if (query.id) {
       // 修改地址的请求
       await putMemberAddressByIdAPI(query.id, form.value)
