@@ -119,6 +119,11 @@ const addCart = async (ev: SkuPopupEvent) => {
   // 关闭SKU弹窗
   isShowSku.value = false
 }
+
+// 立即购买事件
+const onBuyNow = (ev: SkuPopupEvent) => {
+  uni.navigateTo({ url: `/pagesOrder/create/create?skuId=${ev._id}&count=${ev.buy_num}` })
+}
 </script>
 
 <template>
@@ -135,6 +140,7 @@ const addCart = async (ev: SkuPopupEvent) => {
       backgroundColor: '#E9F8F5',
     }"
     @add-cart="addCart"
+    @buy-now="onBuyNow"
   />
   <scroll-view scroll-y class="viewport">
     <!-- 基本信息 -->
