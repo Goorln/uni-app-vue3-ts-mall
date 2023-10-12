@@ -11,6 +11,8 @@ import type {
   SkuPopupLocaldata,
 } from '@/components/vk-data-goods-sku-popup/vk-data-goods-sku-popup'
 import { postMemberCartAPI } from '@/services/cart'
+import { getMemberAddressAPI } from '@/services/address'
+import type { AddressItem } from '@/types/address'
 
 // 获取屏幕边界到安全区域的距离
 const { safeAreaInsets } = uni.getSystemInfoSync()
@@ -53,6 +55,7 @@ const getGoodsDetail = async () => {
 // 页面加载时
 onLoad(() => {
   getGoodsDetail()
+  getMemberAddress()
 })
 
 // 轮播图变化时
@@ -123,6 +126,13 @@ const addCart = async (ev: SkuPopupEvent) => {
 // 立即购买事件
 const onBuyNow = (ev: SkuPopupEvent) => {
   uni.navigateTo({ url: `/pagesOrder/create/create?skuId=${ev._id}&count=${ev.buy_num}` })
+}
+
+// 获取收货地址
+const memberAddressList = ref<AddressItem[]>([])
+const getMemberAddress = async () => {
+  const res = await getMemberAddressAPI()
+  memberAddressList.value = res.result
 }
 </script>
 
@@ -251,7 +261,11 @@ const onBuyNow = (ev: SkuPopupEvent) => {
   </view>
   <!-- 弹出层 -->
   <uni-popup ref="popup" type="bottom" background-color="#fff">
-    <AddressPanel v-if="popupName === 'address'" @close="popup?.close()" />
+    <AddressPanel
+      v-if="popupName === 'address'"
+      @close="popup?.close()"
+      :list="memberAddressList"
+    />
     <ServicePanel v-if="popupName === 'service'" @close="popup?.close()" />
   </uni-popup>
 </template>
