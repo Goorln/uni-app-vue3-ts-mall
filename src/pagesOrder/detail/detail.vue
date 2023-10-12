@@ -2,7 +2,11 @@
 import { useGuessList } from '@/composables'
 import { ref } from 'vue'
 import { onReady, onLoad } from '@dcloudio/uni-app'
-import { getMemberOrderByIdAPI, getMemberOrderConsignmentByIdAPI } from '@/services/order'
+import {
+  getMemberOrderByIdAPI,
+  getMemberOrderConsignmentByIdAPI,
+  putMemberOrderReceiptByIdAPI,
+} from '@/services/order'
 import type { OrderResult } from '@/types/order'
 import { OrderState, orderStateList } from '@/services/constants'
 import { getPayMockAPI, getPayWxPayMiniPayAPI } from '@/services/pay'
@@ -95,6 +99,21 @@ const onOrderSend = async () => {
     order.value!.orderState = OrderState.DaiShouHuo
   }
 }
+// 确认收货
+const onOrderConfirm = () => {
+  // 二次确认弹窗
+  uni.showModal({
+    content: '为保障您的权益，请收到货并确认无误后，再确认收货',
+    confirmColor: '#27BA9B',
+    success: async (success) => {
+      if (success.confirm) {
+        const res = await putMemberOrderReceiptByIdAPI(query.id)
+        // 更新订单状态
+        order.value = res.result
+      }
+    },
+  })
+}
 </script>
 
 <template>
@@ -151,6 +170,14 @@ const onOrderSend = async () => {
               @tap="onOrderSend"
             >
               模拟发货
+            </view>
+            <!-- 待收货状态: 展示确认收货按钮 -->
+            <view
+              v-if="order.orderState === OrderState.DaiShouHuo"
+              @tap="onOrderConfirm"
+              class="button"
+            >
+              确认收货
             </view>
           </view>
         </template>
@@ -246,10 +273,12 @@ const onOrderSend = async () => {
             :url="`/pagesOrder/create/create?orderId=${query.id}`"
             hover-class="none"
           >
-            再次购买
+            再次购买{{ order?.orderState === OrderState.DaiShouHuo }}
           </navigator>
           <!-- 待收货状态: 展示确认收货 -->
-          <view class="button primary"> 确认收货 </view>
+          <!-- <view class="button primary" v-if="order?.orderState === OrderState.DaiShouHuo"> -->
+          <!-- 确认收货 -->
+          <!-- </view> -->
           <!-- 待评价状态: 展示去评价 -->
           <view class="button"> 去评价 </view>
           <!-- 待评价/已完成/已取消 状态: 展示删除订单 -->
