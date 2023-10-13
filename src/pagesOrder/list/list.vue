@@ -12,8 +12,13 @@ const orderTabs = ref([
   { orderState: 4, title: '待评价' },
 ])
 
+// 获取页面参数
+const query = defineProps<{
+  type: string
+}>()
+
 // 高亮下标
-const activeIndex = ref(0)
+const activeIndex = ref(orderTabs.value.findIndex((v) => v.orderState === Number(query.type)))
 </script>
 
 <template>
@@ -24,7 +29,7 @@ const activeIndex = ref(0)
         class="item"
         v-for="(item, index) in orderTabs"
         :key="item.title"
-        @tap="($event) => (activeIndex = index)"
+        @tap="activeIndex = index"
       >
         {{ item.title }}
       </text>
@@ -32,11 +37,7 @@ const activeIndex = ref(0)
       <view class="cursor" :style="{ left: activeIndex * 20 + '%' }"></view>
     </view>
     <!-- 滑动容器 -->
-    <swiper
-      class="swiper"
-      :current="activeIndex"
-      @change="($event) => (activeIndex = $event.detail.current)"
-    >
+    <swiper class="swiper" :current="activeIndex" @change="activeIndex = $event.detail.current">
       <!-- 滑动项 -->
       <swiper-item v-for="item in orderTabs" :key="item.orderState">
         <!-- 订单列表 -->
