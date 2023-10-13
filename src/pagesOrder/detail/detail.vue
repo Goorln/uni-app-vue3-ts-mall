@@ -105,6 +105,7 @@ const onOrderPay = async () => {
   // 关闭当前页面 在跳转支付结果页面
   uni.redirectTo({ url: `/pagesOrder/payment/payment?id=${query.id}` })
 }
+
 // 是否为开发环境
 const isDev = import.meta.env.DEV
 
