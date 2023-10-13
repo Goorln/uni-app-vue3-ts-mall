@@ -44,6 +44,7 @@ const onOrderPay = async (id: string) => {
   }
   // 成功提示
   uni.showToast({ title: '支付成功' })
+  // 更新订单状态
   const order = orderList.value.find((v) => v.id === id)
   order!.orderState = OrderState.DaiFaHuo
 }
