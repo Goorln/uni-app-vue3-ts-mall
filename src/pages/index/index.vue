@@ -89,6 +89,10 @@ const onRefresherrefresh = async () => {
   </scroll-view>
 </template>
 <style lang="scss">
+// 处理手机端没有page标签，识别不到display flex
+/* #ifdef APP-PLUS */
+#app,
+/* #endif */
 page {
   height: 100%;
   background-color: #f7f7f7;
