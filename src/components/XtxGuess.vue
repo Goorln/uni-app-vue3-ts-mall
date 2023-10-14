@@ -82,6 +82,4 @@ defineExpose({
 :host {
   display: block;
 }
-
-
 </style>
